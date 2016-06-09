@@ -46,6 +46,7 @@ public class ArduinoComs implements SerialPortEventListener{
 	
 	// public void ArduinoComs(){}
 	
+	//init the coms on the port specified in Config.java
 	public void init()
 	{
         // the next line is for Raspberry Pi and 
