@@ -11,7 +11,7 @@ public class Config {
 	
 	final public static String VERSION = "1.0";
 	
-	final public static String COMS_PORT = "COM3";
+	final public static String COMS_PORT = "COM4";
 	
 	//-----------//
 	//---DRIVE---//
