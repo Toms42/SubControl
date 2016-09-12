@@ -45,7 +45,7 @@ public class ControllerInput implements Runnable{
 			yValuePercentageLeftJoystick = controller.getYAxisPercentage();
 			xValuePercentageRightJoystick = controller.getXRotationPercentage();
 			yValuePercentageRightJoystick = controller.getYRotationPercentage();
-			
+			//System.out.println("controller test value:\t" + controller.getXAxisPercentage());
 			 
 			/*buttonA = controller.getButtonValue(0);
 			buttonB = controller.getButtonValue(1);
@@ -92,11 +92,20 @@ public class ControllerInput implements Runnable{
 	
 	public void sendMotorValues(int m1, int m2, int m3, int m4)
 	{
-		rovStarter.coms.sendUnsigned(127);
-		rovStarter.coms.sendUnsigned(m1+50);
-		rovStarter.coms.sendUnsigned(m2+50);
-		rovStarter.coms.sendUnsigned(m3+50);
-		rovStarter.coms.sendUnsigned(m4+50);
+		if(rovStarter.coms.initialized)
+		{
+			System.out.println("sending motor stuff");
+			rovStarter.coms.sendUnsigned(127);
+			rovStarter.coms.sendUnsigned(m1+50);
+			rovStarter.coms.sendUnsigned(m2+50);
+			rovStarter.coms.sendUnsigned(m3+50);
+			rovStarter.coms.sendUnsigned(m4+50);
+		}
+		else
+		{
+
+			//System.out.println("not sending motor stuff because not initialized");
+		}
 	}
 	
 	public void startPolling()

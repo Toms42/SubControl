@@ -4,6 +4,8 @@ import java.awt.Dimension;
 
 import com.github.sarxos.webcam.WebcamResolution;
 
+
+
 public class Config {
 
 	final public static String VIDEO_PATH = "video.wmv"; // was .TS
@@ -11,7 +13,7 @@ public class Config {
 	
 	final public static String VERSION = "1.0";
 	
-	final public static String COMS_PORT = "COM4";
+	public static String COMS_PORT = "COM0";
 	
 	//-----------//
 	//---DRIVE---//

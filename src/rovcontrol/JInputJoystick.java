@@ -156,11 +156,7 @@ public class JInputJoystick {
         // Clear previous values of buttons.
         buttonsValues.clear();
         
-        try {
-            isControllerValid = controller.poll();
-        } catch (Exception e) {
-            return false;
-        }
+        isControllerValid = controller.poll();
         if(!isControllerValid)
             return false;
         

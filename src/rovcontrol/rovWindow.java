@@ -56,11 +56,15 @@ public class rovWindow {
 	JTextArea pitch;
 	JTextArea roll;
 	
-	JButton valve1Sample;
-	JButton valve2Sample;
+	JButton led;
+	JButton motor;
 	AnglePanel angle;
 	ControllerPanel controller;
 	MotorPanel motors;
+	private JTextField comport;
+	
+	JTextPane packetsout;
+	JTextPane packetsin;
 	
 	
 
@@ -190,7 +194,7 @@ public class rovWindow {
 		txtrThrust_1.setForeground(Color.LIGHT_GRAY);
 		txtrThrust_1.setBackground(new Color(139, 0, 0));
 		txtrThrust_1.setText("Thrust");
-		txtrThrust_1.setBounds(0, 60, 52, 22);
+		txtrThrust_1.setBounds(0, 60, 50, 22);
 		controller.add(txtrThrust_1);
 		
 		JTextArea txtrAscension = new JTextArea();
@@ -230,7 +234,92 @@ public class rovWindow {
 		left_centered.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JPanel connection = new JPanel();
+		connection.setBackground(new Color(139, 0, 0));
 		left_centered.add(connection);
+		connection.setLayout(null);
+		
+		JTextPane txtpnCommsStats = new JTextPane();
+		txtpnCommsStats.setBackground(new Color(139, 0, 0));
+		txtpnCommsStats.setForeground(Color.LIGHT_GRAY);
+		txtpnCommsStats.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtpnCommsStats.setText("Comms Stats");
+		txtpnCommsStats.setBounds(51, 11, 123, 35);
+		connection.add(txtpnCommsStats);
+		
+		JTextPane txtpnPort = new JTextPane();
+		txtpnPort.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtpnPort.setForeground(Color.LIGHT_GRAY);
+		txtpnPort.setBackground(new Color(139, 0, 0));
+		txtpnPort.setText("Port:");
+		txtpnPort.setBounds(10, 54, 44, 35);
+		connection.add(txtpnPort);
+		
+		comport = new JTextField();
+		comport.setText(Config.COMS_PORT);
+		comport.setBounds(61, 54, 74, 23);
+		connection.add(comport);
+		comport.setColumns(10);
+		
+		JButton refresh = new JButton("connect");
+		refresh.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		refresh.setBounds(145, 54, 75, 23);
+		refresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rovStarter.coms.close();
+				Config.COMS_PORT=comport.getText();
+				System.out.println("Refresh pressed!\tPort = " + Config.COMS_PORT);
+				rovStarter.coms.init();
+			}
+		});
+		connection.add(refresh);
+		
+		JTextPane txtpnPacketsSent = new JTextPane();
+		txtpnPacketsSent.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtpnPacketsSent.setForeground(Color.LIGHT_GRAY);
+		txtpnPacketsSent.setBackground(new Color(139, 0, 0));
+		txtpnPacketsSent.setText("packets sent:");
+		txtpnPacketsSent.setBounds(10, 114, 85, 23);
+		connection.add(txtpnPacketsSent);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		textPane.setForeground(Color.LIGHT_GRAY);
+		textPane.setBackground(new Color(139, 0, 0));
+		textPane.setText("packets sent:");
+		textPane.setBounds(10, 148, 85, 23);
+		connection.add(textPane);
+		
+		packetsout = new JTextPane();
+		packetsout.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		packetsout.setBackground(Color.DARK_GRAY);
+		packetsout.setForeground(new Color(255, 69, 0));
+		packetsout.setText("0");
+		packetsout.setBounds(105, 114, 102, 23);
+		connection.add(packetsout);
+		
+		packetsin = new JTextPane();
+		packetsin.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		packetsin.setBackground(Color.DARK_GRAY);
+		packetsin.setForeground(new Color(255, 69, 0));
+		packetsin.setText("0");
+		packetsin.setBounds(105, 148, 102, 23);
+		connection.add(packetsin);
+		
+		JTextPane txtpnSignalQualityAvg = new JTextPane();
+		txtpnSignalQualityAvg.setForeground(Color.LIGHT_GRAY);
+		txtpnSignalQualityAvg.setBackground(new Color(139, 0, 0));
+		txtpnSignalQualityAvg.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		txtpnSignalQualityAvg.setText("Signal Quality Avg:");
+		txtpnSignalQualityAvg.setBounds(35, 182, 172, 35);
+		connection.add(txtpnSignalQualityAvg);
+		
+		JTextPane signalQual = new JTextPane();
+		signalQual.setForeground(new Color(255, 69, 0));
+		signalQual.setBackground(Color.DARK_GRAY);
+		signalQual.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		signalQual.setText("0");
+		signalQual.setBounds(79, 216, 67, 35);
+		connection.add(signalQual);
 		
 		motors = new MotorPanel();
 		motors.setBackground(new Color(139, 0, 0));
@@ -341,6 +430,18 @@ public class rovWindow {
 		speed.setBounds(90, 44, 95, 22);
 		panel_5.add(speed);
 		
+		JTextArea txtrCurrent = new JTextArea();
+		txtrCurrent.setText("Current:");
+		txtrCurrent.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent.setBounds(10, 84, 70, 22);
+		panel_5.add(txtrCurrent);
+		
+		JTextArea currentAll = new JTextArea();
+		currentAll.setForeground(Color.WHITE);
+		currentAll.setBackground(Color.DARK_GRAY);
+		currentAll.setBounds(90, 84, 97, 22);
+		panel_5.add(currentAll);
+		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBackground(new Color(192, 192, 192));
 		right_centered.add(panel_4);
@@ -361,61 +462,113 @@ public class rovWindow {
 		JTextArea txtrTemperature = new JTextArea();
 		txtrTemperature.setText("Temperature:");
 		txtrTemperature.setBackground(Color.LIGHT_GRAY);
-		txtrTemperature.setBounds(10, 46, 106, 29);
+		txtrTemperature.setBounds(10, 44, 106, 29);
 		panel_4.add(txtrTemperature);
 		
 		temperature = new JTextArea();
 		temperature.setForeground(Color.WHITE);
 		temperature.setBackground(Color.DARK_GRAY);
-		temperature.setBounds(123, 46, 97, 22);
+		temperature.setBounds(123, 44, 97, 22);
 		panel_4.add(temperature);
+		
+		JTextArea txtrCurrent_1 = new JTextArea();
+		txtrCurrent_1.setText("Current 1:");
+		txtrCurrent_1.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_1.setBounds(10, 98, 84, 22);
+		panel_4.add(txtrCurrent_1);
+		
+		JTextArea current1 = new JTextArea();
+		current1.setForeground(Color.WHITE);
+		current1.setBackground(Color.DARK_GRAY);
+		current1.setBounds(123, 98, 97, 22);
+		panel_4.add(current1);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(192, 192, 192));
 		right_centered.add(panel_3);
 		panel_3.setLayout(null);
 		
-		JTextArea txtrReminder1 = new JTextArea();
-		txtrReminder1.setText("Green = Valve Open");
-		txtrReminder1.setBackground(Color.LIGHT_GRAY);
-		txtrReminder1.setBounds(10, 11, 166, 22);
-		panel_3.add(txtrReminder1);
+		JTextArea txtrCurrent_2 = new JTextArea();
+		txtrCurrent_2.setBounds(10, 11, 89, 22);
+		panel_3.add(txtrCurrent_2);
+		txtrCurrent_2.setText("Current 2:");
+		txtrCurrent_2.setBackground(Color.LIGHT_GRAY);
 		
-		JTextArea txtrReminder2 = new JTextArea();
-		txtrReminder2.setText("Red = Valve Closed");
-		txtrReminder2.setBackground(Color.LIGHT_GRAY);
-		txtrReminder2.setBounds(10, 44, 166, 22);
-		panel_3.add(txtrReminder2);
+		JTextArea txtrCurrent_3 = new JTextArea();
+		txtrCurrent_3.setText("Current 3:");
+		txtrCurrent_3.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_3.setBounds(10, 44, 89, 22);
+		panel_3.add(txtrCurrent_3);
+		
+		JTextArea txtrCurrent_4 = new JTextArea();
+		txtrCurrent_4.setText("Current 4:");
+		txtrCurrent_4.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_4.setBounds(10, 72, 89, 22);
+		panel_3.add(txtrCurrent_4);
+		
+		JTextArea current2 = new JTextArea();
+		current2.setForeground(Color.WHITE);
+		current2.setBackground(Color.DARK_GRAY);
+		current2.setBounds(123, 11, 97, 22);
+		panel_3.add(current2);
+		
+		JTextArea current3 = new JTextArea();
+		current3.setForeground(Color.WHITE);
+		current3.setBackground(Color.DARK_GRAY);
+		current3.setBounds(123, 44, 97, 22);
+		panel_3.add(current3);
+		
+		JTextArea current4 = new JTextArea();
+		current4.setForeground(Color.WHITE);
+		current4.setBackground(Color.DARK_GRAY);
+		current4.setBounds(123, 72, 97, 22);
+		panel_3.add(current4);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(192, 192, 192));
 		right_centered.add(panel);
 		panel.setLayout(null);
 		
-		valve2Sample = new JButton("Sample 2");
-		valve2Sample.setBounds(131, 11, 89, 52);
-		panel.add(valve2Sample);
-		
-		JButton valve1Reset = new JButton("Reset 1");
-		valve1Reset.setBounds(10, 75, 89, 23);
-		panel.add(valve1Reset);
-		
-		valve1Sample = new JButton("Sample 1");
-		valve1Sample.setBackground(Color.GREEN);
-		valve1Sample.addActionListener(new ActionListener() {
+		motor = new JButton("Motors");
+		motor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Data.setMotors(!Data.getMotors());
+				if(Data.getMotors())
+				{
+					System.out.println("Motors turned on!");
+				}
+				else
+				{
+					System.out.println("Motors turned off!");
+				}
+			}
+		});
+		motor.setBackground(Color.RED);
+		motor.setBounds(131, 11, 89, 82);
+		panel.add(motor);
+		
+		led = new JButton("LED's");
+		led.setBackground(Color.RED);
+		led.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Data.setLed(!Data.getLed());
+				
+				if(Data.getLed())
+				{
+					System.out.println("LED's turned on!");
+				}
+				else
+				{
+					System.out.println("LED's turned off!");
+				}
 			}
 		});
 		
-		valve1Sample.setBounds(10, 11, 89, 52);
-		panel.add(valve1Sample);
-		
-		JButton valve2Reset = new JButton("Reset 2");
-		valve2Reset.setBounds(131, 72, 89, 23);
-		panel.add(valve2Reset);
+		led.setBounds(10, 11, 89, 82);
+		panel.add(led);
 
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(consolePn, "SubControl");
-		//System.setOut(new PrintStream(taOutputStream));
+		System.setOut(new PrintStream(taOutputStream));
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setForeground(Color.DARK_GRAY);
@@ -483,20 +636,20 @@ public class rovWindow {
 		temperature.setText(Math.round(100*t)/100.0 +"C");
 	}
 	
-	public synchronized void refreshValve1Open(boolean v1)
+	public synchronized void refreshLed(boolean leds)
 	{
-		if (v1)
-			valve1Sample.setBackground(Color.GREEN);
+		if (leds)
+			led.setBackground(Color.GREEN);
 		else 
-			valve1Sample.setBackground(Color.RED);
+			led.setBackground(Color.RED);
 	}
 	
-	public synchronized void refreshValve2Open(boolean v2)
+	public synchronized void refreshMotor(boolean motors)
 	{
-		if (v2)
-			valve2Sample.setBackground(Color.GREEN);
+		if (motors)
+			motor.setBackground(Color.GREEN);
 		else 
-			valve2Sample.setBackground(Color.RED);
+			motor.setBackground(Color.RED);
 	}
 	
 	public synchronized void refreshRoll(int r)

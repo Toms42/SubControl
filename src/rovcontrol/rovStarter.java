@@ -35,7 +35,7 @@ public class rovStarter {
 		}
 		
 		coms = new ArduinoComs();
-		coms.init();
+		//coms.init();
 		initWindow();
 		
 		try {

@@ -41,6 +41,8 @@ public class ArduinoComs implements SerialPortEventListener{
 	private static final int READ_BUF_SIZE = 200; // seems to be about 32
 	private static final int ARDUINO_PACKET_SIZE = 5; // packet size not including 255
 	
+	public static boolean initialized = false;
+	
 	public ConcurrentLinkedQueue<Integer> byteQueue;
 	// https://docs.oracle.com/javase/7/docs/api/index.html?java/util/concurrent/ConcurrentLinkedQueue.html
 	
@@ -53,6 +55,7 @@ public class ArduinoComs implements SerialPortEventListener{
         // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
 
 		// NEW CODE:
+		System.out.println("initializing arduino comms");
 		
 		byteQueue = new ConcurrentLinkedQueue<Integer>();
 
@@ -96,6 +99,7 @@ public class ArduinoComs implements SerialPortEventListener{
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
 			System.out.println("coms started");
+			initialized=true;
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
@@ -115,6 +119,7 @@ public class ArduinoComs implements SerialPortEventListener{
 			write("send underflow: " + b);
 			b=0;
 		}
+		write("trying to send a number");
 		write("sending value: " + b);
 		try {
 			outputStream.write(b);
@@ -129,9 +134,10 @@ public class ArduinoComs implements SerialPortEventListener{
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
+		initialized = false;
 	}
 	public void write (String s) {
-		System.out.println(s);
+		//System.out.println(s);
 	}
 	
 	/**

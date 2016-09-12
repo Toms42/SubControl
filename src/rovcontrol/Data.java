@@ -9,10 +9,8 @@ public class Data {
 	private static double temperature=0;
 	private static int roll=0;
 	private static int pitch=0;
-	private static boolean valve1Open=false;
-	private static boolean valve2Open=false;
-	private static boolean sample1Taken=false;
-	private static boolean sample2Taken=false;
+	private static boolean ledState=false;
+	private static boolean motorState=false;
 	
 	//Data fields for XBOX
 	private static int leftX=0;
@@ -98,50 +96,28 @@ public class Data {
 		return temperature;
 	}
 	
-	//Accessor and mutator for Volve1Open
-	synchronized public static void setValve1Open(boolean v1)
+	//Accessor and mutator for led
+	synchronized public static void setLed(boolean led)
 	{
-		valve1Open = v1;
-		rovStarter.window.refreshValve1Open(v1);
+		ledState = led;
+		rovStarter.window.refreshLed(led);
 	}
 			
-	public static boolean getValve1Open()
+	public static boolean getLed()
 	{
-		return valve1Open;
+		return ledState;
 	}
 	
-	//Accessor and mutator for Sample1Taken
-	synchronized public static void setSample1Taken(boolean s1)
+	//Accessor and mutator for motors
+	synchronized public static void setMotors(boolean m)
 	{
-		sample1Taken = s1;
+		motorState = m;
+		rovStarter.window.refreshMotor(m);
 	}
 			
-	public static boolean getSample1Taken()
+	public static boolean getMotors()
 	{
-		return sample1Taken;
-	}
-	
-	//Accessor and mutator for Volve2Open
-	synchronized public static void setValve2Open(boolean v2)
-	{
-		valve2Open = v2;
-		rovStarter.window.refreshValve2Open(v2);
-	}
-			
-	public static boolean getValve2Open()
-	{
-		return valve2Open;
-	}
-	
-	//Accessor and mutator for Sample2Taken
-	synchronized public static void setSample2Taken(boolean s2)
-	{
-		sample2Taken = s2;
-	}
-			
-	public static boolean getSample2Taken()
-	{
-		return sample1Taken;
+		return motorState;
 	}
 	
 	//Accessor and mutator for Roll
