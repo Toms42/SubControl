@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ public class ArduinoComs implements SerialPortEventListener{
 	
 	SerialPort serialPort;
     /** The port we're normally going to use. */
-	private static final String PORT_NAMES[] = {Config.COMS_PORT };
+	public static String PORT_NAMES[] = {Config.COMS_PORT };
 	/**
 	* A BufferedReader which will be fed by a InputStreamReader 
 	* converting the bytes into characters 
@@ -38,10 +40,13 @@ public class ArduinoComs implements SerialPortEventListener{
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
-	private static final int READ_BUF_SIZE = 200; // seems to be about 32
-	private static final int ARDUINO_PACKET_SIZE = 5; // packet size not including 255
+	private static final int READ_BUF_SIZE = 300; // seems to be about 32
+	private static final int ARDUINO_PACKET_SIZE = 33; // packet size (in B) not including 255
 	
 	public static boolean initialized = false;
+	
+	private static long packets_in = 0;
+	private static long packets_out = 0;
 	
 	public ConcurrentLinkedQueue<Integer> byteQueue;
 	// https://docs.oracle.com/javase/7/docs/api/index.html?java/util/concurrent/ConcurrentLinkedQueue.html
@@ -59,12 +64,17 @@ public class ArduinoComs implements SerialPortEventListener{
 		
 		byteQueue = new ConcurrentLinkedQueue<Integer>();
 
+		packets_in = 0;
+		packets_out = 0;
+		rovStarter.window.refreshNumPackets(packets_in,packets_out);
+		
 		CommPortIdentifier portId = null;
 		@SuppressWarnings("unchecked")
 		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 		
 		//First, Find an instance of serial port as set in PORT_NAMES.
 		while (portEnum.hasMoreElements()) {
+			//System.out.println(portEnum.toString());
 			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
 			for (String portName : PORT_NAMES) {
 				if (currPortId.getName().equals(portName)) {
@@ -75,6 +85,7 @@ public class ArduinoComs implements SerialPortEventListener{
 		}
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
+			Data.setStatus(false);
 			return;
 		}
 		
@@ -99,12 +110,19 @@ public class ArduinoComs implements SerialPortEventListener{
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
 			System.out.println("coms started");
+			Data.setStatus(true);
 			initialized=true;
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
 
 		
+	}
+	
+	public synchronized void increase_packet_count()
+	{
+		packets_out++;
+		rovStarter.window.refreshNumPackets(packets_in,packets_out);
 	}
 	
 	public synchronized void sendUnsigned(int b)
@@ -134,6 +152,12 @@ public class ArduinoComs implements SerialPortEventListener{
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
+		//packets_in = 0;
+		//packets_out = 0;
+		
+		rovStarter.window.refreshNumPackets(packets_in,packets_out);
+		
+		Data.setStatus(false);
 		initialized = false;
 	}
 	public void write (String s) {
@@ -185,18 +209,63 @@ public class ArduinoComs implements SerialPortEventListener{
 	private void updateData(ConcurrentLinkedQueue bq)
 	{
 		write("updating values..."); 
+		
+		packets_in++;
+		
 		try { // Order is important -- check Arduino code
+			
+			Data.setVoltage((double)b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setCurrent1(b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setCurrent2(b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setCurrent3(b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setCurrent4(b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setRoll((int)b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setPitch((int)b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setPressure(b2f((int)bq.remove(),(int)bq.remove(),
+					(int)bq.remove(),(int)bq.remove()));
+			
+			Data.setTemperature((double)(int)bq.remove());
+			
+			
+			
+			/*
 			Data.setTemperature((double)(int)bq.remove());
 			Data.setPressure((int)bq.remove());
 			Data.setRoll((int)(bq.remove()) - 128);
 			Data.setPitch(-((int)(bq.remove()) - 128));
 			Data.setVoltage((double)(int) bq.remove());
+			*/
 		} catch (Exception e) {
 			System.out.println("error receiving data" + e.toString());
 			e.printStackTrace();
 		}
 	}
 
+	float b2f(int a, int b, int c, int d)
+	{
+		byte ab =(byte)( a & 0x00FF);
+		byte bb =(byte)( b & 0x00FF);
+		byte cb =(byte)( c & 0x00FF);
+		byte db =(byte)( d & 0x00FF);
+		byte[] buf ={ab,bb,cb,db};
+		float res = ByteBuffer.wrap(buf).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+		
+		return res;
+	}
 	
 	public CommPortIdentifier[] getPortsList()
 	{
@@ -212,6 +281,9 @@ public class ArduinoComs implements SerialPortEventListener{
             if(portIdentifier.getPortType()==CommPortIdentifier.PORT_SERIAL)
             {
             	ports.add(portIdentifier);
+            	Config.COMS_PORT=portIdentifier.getName();
+            	rovStarter.window.comport.setText(Config.COMS_PORT);
+            	PORT_NAMES[0]=Config.COMS_PORT;
                 System.out.println("found serial port: " + portIdentifier.getName());
             }
         }  

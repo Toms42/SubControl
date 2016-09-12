@@ -94,12 +94,27 @@ public class ControllerInput implements Runnable{
 	{
 		if(rovStarter.coms.initialized)
 		{
-			System.out.println("sending motor stuff");
+			int state_info = 0;
+			
+			if(Data.getLed())
+			{
+				state_info |= 0x01;
+			}
+			if(Data.getMotors())
+			{
+				state_info |= 0b10;
+			}
+			
+			//System.out.println("sending motor stuff");
 			rovStarter.coms.sendUnsigned(127);
 			rovStarter.coms.sendUnsigned(m1+50);
 			rovStarter.coms.sendUnsigned(m2+50);
 			rovStarter.coms.sendUnsigned(m3+50);
 			rovStarter.coms.sendUnsigned(m4+50);
+			//System.out.println(Integer.toBinaryString(state_info));
+			rovStarter.coms.sendUnsigned(state_info);
+			
+			rovStarter.coms.increase_packet_count();
 		}
 		else
 		{

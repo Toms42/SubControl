@@ -43,6 +43,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class rovWindow {
 
@@ -61,11 +62,17 @@ public class rovWindow {
 	AnglePanel angle;
 	ControllerPanel controller;
 	MotorPanel motors;
-	private JTextField comport;
+	public JTextField comport;
 	
 	JTextPane packetsout;
 	JTextPane packetsin;
+	JTextPane txtpnDisconnected;
 	
+	JTextArea currentAll;
+	JTextArea current1;
+	JTextArea current2;
+	JTextArea current3;
+	JTextArea current4;
 	
 
 	/**
@@ -90,6 +97,7 @@ public class rovWindow {
 	
 	private void initialize() {
 		frame = new JFrame();
+		frame.setAlwaysOnTop(true);
 		frame.setBackground(Color.BLACK);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -150,6 +158,7 @@ public class rovWindow {
 		angle.setLayout(null);
 		
 		JTextArea txtrPitch = new JTextArea();
+		txtrPitch.setEditable(false);
 		txtrPitch.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		txtrPitch.setForeground(Color.LIGHT_GRAY);
 		txtrPitch.setText("PITCH:");
@@ -158,6 +167,7 @@ public class rovWindow {
 		angle.add(txtrPitch);
 		
 		JTextArea txtrRoll = new JTextArea();
+		txtrRoll.setEditable(false);
 		txtrRoll.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		txtrRoll.setText("ROLL:");
 		txtrRoll.setForeground(Color.LIGHT_GRAY);
@@ -166,13 +176,15 @@ public class rovWindow {
 		angle.add(txtrRoll);
 		
 		pitch = new JTextArea();
-		pitch.setForeground(Color.LIGHT_GRAY);
+		pitch.setEditable(false);
+		pitch.setForeground(new Color(255, 69, 0));
 		pitch.setBackground(Color.DARK_GRAY);
 		pitch.setBounds(50, 160, 100, 22);
 		angle.add(pitch);
 		
 		roll = new JTextArea();
-		roll.setForeground(Color.LIGHT_GRAY);
+		roll.setEditable(false);
+		roll.setForeground(new Color(255, 69, 0));
 		roll.setBackground(Color.DARK_GRAY);
 		roll.setBounds(200, 160, 100, 22);
 		angle.add(roll);
@@ -184,6 +196,7 @@ public class rovWindow {
 		controller.setLayout(null);
 		
 		JTextArea txtrThrust = new JTextArea();
+		txtrThrust.setEditable(false);
 		txtrThrust.setForeground(Color.LIGHT_GRAY);
 		txtrThrust.setBackground(new Color(139, 0, 0));
 		txtrThrust.setText("Pitch");
@@ -191,6 +204,7 @@ public class rovWindow {
 		controller.add(txtrThrust);
 		
 		JTextArea txtrThrust_1 = new JTextArea();
+		txtrThrust_1.setEditable(false);
 		txtrThrust_1.setForeground(Color.LIGHT_GRAY);
 		txtrThrust_1.setBackground(new Color(139, 0, 0));
 		txtrThrust_1.setText("Thrust");
@@ -198,6 +212,7 @@ public class rovWindow {
 		controller.add(txtrThrust_1);
 		
 		JTextArea txtrAscension = new JTextArea();
+		txtrAscension.setEditable(false);
 		txtrAscension.setText("Ascension");
 		txtrAscension.setForeground(Color.LIGHT_GRAY);
 		txtrAscension.setBackground(new Color(139, 0, 0));
@@ -205,6 +220,7 @@ public class rovWindow {
 		controller.add(txtrAscension);
 		
 		JTextArea txtrYaw = new JTextArea();
+		txtrYaw.setEditable(false);
 		txtrYaw.setText("Yaw");
 		txtrYaw.setForeground(Color.LIGHT_GRAY);
 		txtrYaw.setBackground(new Color(139, 0, 0));
@@ -239,6 +255,7 @@ public class rovWindow {
 		connection.setLayout(null);
 		
 		JTextPane txtpnCommsStats = new JTextPane();
+		txtpnCommsStats.setEditable(false);
 		txtpnCommsStats.setBackground(new Color(139, 0, 0));
 		txtpnCommsStats.setForeground(Color.LIGHT_GRAY);
 		txtpnCommsStats.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -247,6 +264,7 @@ public class rovWindow {
 		connection.add(txtpnCommsStats);
 		
 		JTextPane txtpnPort = new JTextPane();
+		txtpnPort.setEditable(false);
 		txtpnPort.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtpnPort.setForeground(Color.LIGHT_GRAY);
 		txtpnPort.setBackground(new Color(139, 0, 0));
@@ -260,13 +278,17 @@ public class rovWindow {
 		connection.add(comport);
 		comport.setColumns(10);
 		
-		JButton refresh = new JButton("connect");
+		JButton refresh = new JButton("Connect");
+		refresh.setBackground(new Color(50, 205, 50));
 		refresh.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		refresh.setBounds(145, 54, 75, 23);
 		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rovStarter.coms.close();
 				Config.COMS_PORT=comport.getText();
+				Config.COMS_PORT=Config.COMS_PORT.toUpperCase();
+				comport.setText(Config.COMS_PORT);
+				rovStarter.coms.PORT_NAMES[0]=Config.COMS_PORT;
 				System.out.println("Refresh pressed!\tPort = " + Config.COMS_PORT);
 				rovStarter.coms.init();
 			}
@@ -274,6 +296,7 @@ public class rovWindow {
 		connection.add(refresh);
 		
 		JTextPane txtpnPacketsSent = new JTextPane();
+		txtpnPacketsSent.setEditable(false);
 		txtpnPacketsSent.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtpnPacketsSent.setForeground(Color.LIGHT_GRAY);
 		txtpnPacketsSent.setBackground(new Color(139, 0, 0));
@@ -281,45 +304,71 @@ public class rovWindow {
 		txtpnPacketsSent.setBounds(10, 114, 85, 23);
 		connection.add(txtpnPacketsSent);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textPane.setForeground(Color.LIGHT_GRAY);
-		textPane.setBackground(new Color(139, 0, 0));
-		textPane.setText("packets sent:");
-		textPane.setBounds(10, 148, 85, 23);
-		connection.add(textPane);
+		JTextPane txtpnPacketsReceived = new JTextPane();
+		txtpnPacketsReceived.setEditable(false);
+		txtpnPacketsReceived.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtpnPacketsReceived.setForeground(Color.LIGHT_GRAY);
+		txtpnPacketsReceived.setBackground(new Color(139, 0, 0));
+		txtpnPacketsReceived.setText("packets received:");
+		txtpnPacketsReceived.setBounds(10, 148, 102, 23);
+		connection.add(txtpnPacketsReceived);
 		
 		packetsout = new JTextPane();
+		packetsout.setEditable(false);
 		packetsout.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		packetsout.setBackground(Color.DARK_GRAY);
 		packetsout.setForeground(new Color(255, 69, 0));
 		packetsout.setText("0");
-		packetsout.setBounds(105, 114, 102, 23);
+		packetsout.setBounds(118, 114, 102, 23);
 		connection.add(packetsout);
 		
 		packetsin = new JTextPane();
+		packetsin.setEditable(false);
 		packetsin.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		packetsin.setBackground(Color.DARK_GRAY);
 		packetsin.setForeground(new Color(255, 69, 0));
 		packetsin.setText("0");
-		packetsin.setBounds(105, 148, 102, 23);
+		packetsin.setBounds(118, 148, 102, 23);
 		connection.add(packetsin);
 		
 		JTextPane txtpnSignalQualityAvg = new JTextPane();
+		txtpnSignalQualityAvg.setEditable(false);
 		txtpnSignalQualityAvg.setForeground(Color.LIGHT_GRAY);
 		txtpnSignalQualityAvg.setBackground(new Color(139, 0, 0));
 		txtpnSignalQualityAvg.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		txtpnSignalQualityAvg.setText("Signal Quality Avg:");
-		txtpnSignalQualityAvg.setBounds(35, 182, 172, 35);
+		txtpnSignalQualityAvg.setText("Connection Status:");
+		txtpnSignalQualityAvg.setBounds(35, 182, 172, 29);
 		connection.add(txtpnSignalQualityAvg);
 		
-		JTextPane signalQual = new JTextPane();
-		signalQual.setForeground(new Color(255, 69, 0));
-		signalQual.setBackground(Color.DARK_GRAY);
-		signalQual.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		signalQual.setText("0");
-		signalQual.setBounds(79, 216, 67, 35);
-		connection.add(signalQual);
+		JButton disconnect = new JButton("Stop");
+		disconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rovStarter.coms.close();
+			}
+		});
+		disconnect.setBackground(new Color(255, 0, 0));
+		disconnect.setBounds(145, 80, 75, 23);
+		connection.add(disconnect);
+		
+		txtpnDisconnected = new JTextPane();
+		txtpnDisconnected.setEditable(false);
+		txtpnDisconnected.setText("DISCONNECTED");
+		txtpnDisconnected.setForeground(new Color(255, 69, 0));
+		txtpnDisconnected.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtpnDisconnected.setBackground(Color.DARK_GRAY);
+		txtpnDisconnected.setBounds(45, 209, 134, 29);
+		connection.add(txtpnDisconnected);
+		
+		JButton search = new JButton("Search");
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rovStarter.coms.getPortsList();
+			}
+		});
+		search.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		search.setBackground(new Color(0, 255, 255));
+		search.setBounds(60, 80, 75, 23);
+		connection.add(search);
 		
 		motors = new MotorPanel();
 		motors.setBackground(new Color(139, 0, 0));
@@ -327,6 +376,7 @@ public class rovWindow {
 		motors.setLayout(null);
 		
 		JTextArea txtrLeft = new JTextArea();
+		txtrLeft.setEditable(false);
 		txtrLeft.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		txtrLeft.setForeground(Color.LIGHT_GRAY);
 		txtrLeft.setBackground(new Color(139, 0, 0));
@@ -335,6 +385,7 @@ public class rovWindow {
 		motors.add(txtrLeft);
 		
 		JTextArea txtrFront = new JTextArea();
+		txtrFront.setEditable(false);
 		txtrFront.setText("Front");
 		txtrFront.setForeground(Color.LIGHT_GRAY);
 		txtrFront.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -343,6 +394,7 @@ public class rovWindow {
 		motors.add(txtrFront);
 		
 		JTextArea txtrBack = new JTextArea();
+		txtrBack.setEditable(false);
 		txtrBack.setText("Back");
 		txtrBack.setForeground(Color.LIGHT_GRAY);
 		txtrBack.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -351,6 +403,7 @@ public class rovWindow {
 		motors.add(txtrBack);
 		
 		JTextArea txtrRight = new JTextArea();
+		txtrRight.setEditable(false);
 		txtrRight.setText("Right");
 		txtrRight.setForeground(Color.LIGHT_GRAY);
 		txtrRight.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -381,19 +434,21 @@ public class rovWindow {
 		right_centered.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JPanel panel_6 = new JPanel();
-		panel_6.setBackground(new Color(192, 192, 192));
+		panel_6.setBackground(new Color(139, 0, 0));
 		right_centered.add(panel_6);
 		panel_6.setLayout(null);
 		
 		JTextPane voltageLabel = new JTextPane();
+		voltageLabel.setEditable(false);
 		voltageLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		voltageLabel.setForeground(new Color(0, 0, 0));
-		voltageLabel.setBackground(new Color(192, 192, 192));
+		voltageLabel.setForeground(Color.LIGHT_GRAY);
+		voltageLabel.setBackground(new Color(139, 0, 0));
 		voltageLabel.setText("Battery Voltage:");
 		voltageLabel.setBounds(26, 11, 178, 35);
 		panel_6.add(voltageLabel);
 		
 		txtpnv = new JTextPane();
+		txtpnv.setEditable(false);
 		txtpnv.setForeground(Color.CYAN);
 		txtpnv.setBackground(new Color(0, 0, 0));
 		txtpnv.setFont(new Font("Tahoma", Font.PLAIN, 40));
@@ -402,130 +457,156 @@ public class rovWindow {
 		panel_6.add(txtpnv);
 		
 		JPanel panel_5 = new JPanel();
-		panel_5.setBackground(new Color(192, 192, 192));
+		panel_5.setBackground(new Color(139, 0, 0));
 		right_centered.add(panel_5);
 		panel_5.setLayout(null);
 		
 		JTextArea txtrDepth = new JTextArea();
-		txtrDepth.setBackground(Color.LIGHT_GRAY);
+		txtrDepth.setForeground(Color.LIGHT_GRAY);
+		txtrDepth.setEditable(false);
+		txtrDepth.setBackground(new Color(139, 0, 0));
 		txtrDepth.setText("Depth:");
 		txtrDepth.setBounds(10, 11, 70, 22);
 		panel_5.add(txtrDepth);
 		
 		JTextArea txtrSpeed = new JTextArea();
+		txtrSpeed.setForeground(Color.LIGHT_GRAY);
+		txtrSpeed.setEditable(false);
 		txtrSpeed.setText("Speed:");
-		txtrSpeed.setBackground(Color.LIGHT_GRAY);
+		txtrSpeed.setBackground(new Color(139, 0, 0));
 		txtrSpeed.setBounds(10, 44, 70, 29);
 		panel_5.add(txtrSpeed);
 		
 		depth = new JTextArea();
-		depth.setForeground(Color.WHITE);
+		depth.setEditable(false);
+		depth.setForeground(new Color(255, 69, 0));
 		depth.setBackground(Color.DARK_GRAY);
 		depth.setBounds(90, 11, 95, 22);
 		panel_5.add(depth);
 		
 		speed = new JTextArea();
-		speed.setForeground(Color.WHITE);
+		speed.setEditable(false);
+		speed.setForeground(new Color(255, 69, 0));
 		speed.setBackground(Color.DARK_GRAY);
 		speed.setBounds(90, 44, 95, 22);
 		panel_5.add(speed);
 		
 		JTextArea txtrCurrent = new JTextArea();
+		txtrCurrent.setForeground(Color.LIGHT_GRAY);
+		txtrCurrent.setEditable(false);
 		txtrCurrent.setText("Current:");
-		txtrCurrent.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent.setBackground(new Color(139, 0, 0));
 		txtrCurrent.setBounds(10, 84, 70, 22);
 		panel_5.add(txtrCurrent);
 		
-		JTextArea currentAll = new JTextArea();
-		currentAll.setForeground(Color.WHITE);
+		currentAll = new JTextArea();
+		currentAll.setEditable(false);
+		currentAll.setForeground(new Color(255, 69, 0));
 		currentAll.setBackground(Color.DARK_GRAY);
 		currentAll.setBounds(90, 84, 97, 22);
 		panel_5.add(currentAll);
 		
 		JPanel panel_4 = new JPanel();
-		panel_4.setBackground(new Color(192, 192, 192));
+		panel_4.setBackground(new Color(139, 0, 0));
 		right_centered.add(panel_4);
 		panel_4.setLayout(null);
 		
 		JTextArea txtrPressure = new JTextArea();
+		txtrPressure.setForeground(Color.LIGHT_GRAY);
+		txtrPressure.setEditable(false);
 		txtrPressure.setBounds(10, 11, 70, 22);
 		panel_4.add(txtrPressure);
 		txtrPressure.setText("Pressure:");
-		txtrPressure.setBackground(Color.LIGHT_GRAY);
+		txtrPressure.setBackground(new Color(139, 0, 0));
 		
 		pressure = new JTextArea();
-		pressure.setForeground(Color.WHITE);
+		pressure.setEditable(false);
+		pressure.setForeground(new Color(255, 69, 0));
 		pressure.setBackground(Color.DARK_GRAY);
 		pressure.setBounds(123, 11, 97, 22);
 		panel_4.add(pressure);
 		
 		JTextArea txtrTemperature = new JTextArea();
+		txtrTemperature.setForeground(Color.LIGHT_GRAY);
+		txtrTemperature.setEditable(false);
 		txtrTemperature.setText("Temperature:");
-		txtrTemperature.setBackground(Color.LIGHT_GRAY);
+		txtrTemperature.setBackground(new Color(139, 0, 0));
 		txtrTemperature.setBounds(10, 44, 106, 29);
 		panel_4.add(txtrTemperature);
 		
 		temperature = new JTextArea();
-		temperature.setForeground(Color.WHITE);
+		temperature.setForeground(new Color(255, 69, 0));
 		temperature.setBackground(Color.DARK_GRAY);
 		temperature.setBounds(123, 44, 97, 22);
 		panel_4.add(temperature);
 		
 		JTextArea txtrCurrent_1 = new JTextArea();
+		txtrCurrent_1.setForeground(Color.LIGHT_GRAY);
+		txtrCurrent_1.setEditable(false);
 		txtrCurrent_1.setText("Current 1:");
-		txtrCurrent_1.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_1.setBackground(new Color(139, 0, 0));
 		txtrCurrent_1.setBounds(10, 98, 84, 22);
 		panel_4.add(txtrCurrent_1);
 		
-		JTextArea current1 = new JTextArea();
-		current1.setForeground(Color.WHITE);
+		current1 = new JTextArea();
+		current1.setEditable(false);
+		current1.setForeground(new Color(255, 69, 0));
 		current1.setBackground(Color.DARK_GRAY);
 		current1.setBounds(123, 98, 97, 22);
 		panel_4.add(current1);
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(192, 192, 192));
+		panel_3.setBackground(new Color(139, 0, 0));
 		right_centered.add(panel_3);
 		panel_3.setLayout(null);
 		
 		JTextArea txtrCurrent_2 = new JTextArea();
+		txtrCurrent_2.setForeground(Color.LIGHT_GRAY);
+		txtrCurrent_2.setEditable(false);
 		txtrCurrent_2.setBounds(10, 11, 89, 22);
 		panel_3.add(txtrCurrent_2);
 		txtrCurrent_2.setText("Current 2:");
-		txtrCurrent_2.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_2.setBackground(new Color(139, 0, 0));
 		
 		JTextArea txtrCurrent_3 = new JTextArea();
+		txtrCurrent_3.setForeground(Color.LIGHT_GRAY);
+		txtrCurrent_3.setEditable(false);
 		txtrCurrent_3.setText("Current 3:");
-		txtrCurrent_3.setBackground(Color.LIGHT_GRAY);
-		txtrCurrent_3.setBounds(10, 44, 89, 22);
+		txtrCurrent_3.setBackground(new Color(139, 0, 0));
+		txtrCurrent_3.setBounds(10, 42, 89, 22);
 		panel_3.add(txtrCurrent_3);
 		
 		JTextArea txtrCurrent_4 = new JTextArea();
+		txtrCurrent_4.setForeground(Color.LIGHT_GRAY);
+		txtrCurrent_4.setEditable(false);
 		txtrCurrent_4.setText("Current 4:");
-		txtrCurrent_4.setBackground(Color.LIGHT_GRAY);
+		txtrCurrent_4.setBackground(new Color(139, 0, 0));
 		txtrCurrent_4.setBounds(10, 72, 89, 22);
 		panel_3.add(txtrCurrent_4);
 		
-		JTextArea current2 = new JTextArea();
-		current2.setForeground(Color.WHITE);
+		current2 = new JTextArea();
+		current2.setEditable(false);
+		current2.setForeground(new Color(255, 69, 0));
 		current2.setBackground(Color.DARK_GRAY);
 		current2.setBounds(123, 11, 97, 22);
 		panel_3.add(current2);
 		
-		JTextArea current3 = new JTextArea();
-		current3.setForeground(Color.WHITE);
+		current3 = new JTextArea();
+		current3.setEditable(false);
+		current3.setForeground(new Color(255, 69, 0));
 		current3.setBackground(Color.DARK_GRAY);
-		current3.setBounds(123, 44, 97, 22);
+		current3.setBounds(123, 42, 97, 22);
 		panel_3.add(current3);
 		
-		JTextArea current4 = new JTextArea();
-		current4.setForeground(Color.WHITE);
+		current4 = new JTextArea();
+		current4.setEditable(false);
+		current4.setForeground(new Color(255, 69, 0));
 		current4.setBackground(Color.DARK_GRAY);
 		current4.setBounds(123, 72, 97, 22);
 		panel_3.add(current4);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(192, 192, 192));
+		panel.setBackground(new Color(139, 0, 0));
 		right_centered.add(panel);
 		panel.setLayout(null);
 		
@@ -672,5 +753,25 @@ public class rovWindow {
 		cameraPanel.setImageSizeDisplayed(true);
 		cameraPanel.setMirrored(false);
 		cameraPanel.setFitArea(true);
+	}
+	
+	public synchronized void refreshConnection(String s)
+	{
+		txtpnDisconnected.setText(s);
+	}
+	
+	public synchronized void updateCurrent(float c1, float c2, float c3, float c4, float ctot)
+	{
+		currentAll.setText(""+ctot);
+		current1.setText(""+c1);
+		current2.setText(""+c2);
+		current3.setText(""+c3);
+		current4.setText(""+c4);
+	}
+	
+	public synchronized void refreshNumPackets(long in, long out)
+	{
+		packetsin.setText(""+in);
+		packetsout.setText(""+out);
 	}
 }

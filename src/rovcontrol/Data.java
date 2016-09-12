@@ -31,9 +31,36 @@ public class Data {
 	private static int frontMotor;
 	private static int backMotor;
 	
+	private static float current1;
+	private static float current2;
+	private static float current3;
+	private static float current4;
 	
+	private static float total_current;
 	
 	public void Data(){}
+	
+	synchronized public static void setCurrent1(float f)
+	{
+		current1 = f;
+		total_current = current1 + current2 + current3 + current4;
+		rovStarter.window.updateCurrent(current1,current2,current3,current4,total_current);
+	}
+	synchronized public static void setCurrent2(float f)
+	{
+		current2 = f;
+		total_current = current1 + current2 + current3 + current4;
+	}
+	synchronized public static void setCurrent3(float f)
+	{
+		current3 = f;
+		total_current = current1 + current2 + current3 + current4;
+	}
+	synchronized public static void setCurrent4(float f)
+	{
+		current4 = f;
+		total_current = current1 + current2 + current3 + current4;
+	}
 	
 	//Accessor and mutator for voltage
 	synchronized public static void setVoltage(double v)
@@ -73,9 +100,9 @@ public class Data {
 	}	
 	
 	//Accessor and mutator for Pressure
-	synchronized public static void setPressure(int p)
+	synchronized public static void setPressure(float p)
 	{
-		pressure = (double) p*100;  // THIS NEEDS FIXED
+		pressure = (double) p;  // THIS NEEDS FIXED
 		rovStarter.window.refreshPressure(p);
 	}
 			
@@ -258,6 +285,19 @@ public class Data {
 	public static boolean getButtonY()
 	{
 		return buttonY;	
+	}
+	
+	//Accessor and mutator for error text
+	public static void setStatus(boolean connection)
+	{
+		if(connection)
+		{
+			rovStarter.window.refreshConnection("CONNECTED");
+		}
+		else
+		{
+			rovStarter.window.refreshConnection("DISCONNECTED");
+		}
 	}
 	
 	//Accessor and mutator for leftMotor
