@@ -4,6 +4,8 @@
 package rovcontrol;
 
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
+import java.awt.SplashScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,7 +23,8 @@ public class rovStarter {
 	public static rovWindow window = new rovWindow();
 	
 	ActionListener actionListener;
-	
+		
+	final static SplashScreen splash = SplashScreen.getSplashScreen();
 	
 	public static void main(String[] args)
 	{
@@ -36,7 +39,6 @@ public class rovStarter {
 		
 		coms = new ArduinoComs();
 		//coms.init();
-		initWindow();
 		
 		try {
 			Thread.sleep(3000);
@@ -47,13 +49,18 @@ public class rovStarter {
 
 		ControllerInput input = new ControllerInput();
 		input.startPolling();
+		
+
+		initWindow();
 		try {
 			window.initWebcamPanel();
 		} catch (Exception e1) {
-			System.out.println("error with camera. sux4u lol");
+			System.out.println("error with camera.");
+			return;
 		}
 		
-		//System.out.println(" > Welcome to Sub Control! \nCurrent version -- " + Config.VERSION);
+		System.out.println(" > Welcome to Sub Control! \nCurrent version -- " + Config.VERSION);
+
 
 		coms.getPortsList();
 
@@ -73,10 +80,11 @@ public class rovStarter {
 	
 	private static void initWindow()
 	{
+		System.out.println("showing gui...");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					window.frame.setVisible(true);
+					window.frmSubControl.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

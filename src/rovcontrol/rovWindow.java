@@ -44,10 +44,11 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import java.awt.Toolkit;
 
 public class rovWindow {
 
-	JFrame frame;
+	JFrame frmSubControl;
 	
 	JTextPane txtpnv;
 	JTextArea depth;
@@ -96,10 +97,14 @@ public class rovWindow {
 	}
 	
 	private void initialize() {
-		frame = new JFrame();
-		frame.setAlwaysOnTop(true);
-		frame.setBackground(Color.BLACK);
-		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		frmSubControl = new JFrame();
+		frmSubControl.setIconImage(Toolkit.getDefaultToolkit().getImage("Submarine-icon.png"));
+		frmSubControl.setForeground(new Color(139, 0, 0));
+		frmSubControl.setTitle("Sub Control 2.0");
+		frmSubControl.setAlwaysOnTop(true);
+		frmSubControl.setBackground(Color.BLACK);
+		frmSubControl.getContentPane().setBackground(Color.DARK_GRAY);
+		frmSubControl.setMinimumSize(new Dimension(1020,861));
 		
 		//Setting up each individual panel
 		
@@ -113,7 +118,7 @@ public class rovWindow {
 		
 		JPanel lowerPanel = new JPanel();
 		lowerPanel.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
+		frmSubControl.getContentPane().add(lowerPanel, BorderLayout.SOUTH);
 		lowerPanel.setPreferredSize(new Dimension(0,220));
 		GridBagLayout gbl_lowerPanel = new GridBagLayout();
 		gbl_lowerPanel.columnWidths = new int[]{0, 0};
@@ -229,7 +234,7 @@ public class rovWindow {
 		
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(leftPanel, BorderLayout.WEST);
+		frmSubControl.getContentPane().add(leftPanel, BorderLayout.WEST);
 		leftPanel.setPreferredSize(new Dimension(250,0));
 		GridBagLayout gbl_leftPanel = new GridBagLayout();
 		gbl_leftPanel.columnWidths = new int[]{0, 0};
@@ -413,7 +418,7 @@ public class rovWindow {
 		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(rightPanel, BorderLayout.EAST);
+		frmSubControl.getContentPane().add(rightPanel, BorderLayout.EAST);
 		rightPanel.setPreferredSize(new Dimension(250,0));
 		GridBagLayout gbl_rightPanel = new GridBagLayout();
 		gbl_rightPanel.columnWidths = new int[]{0, 0};
@@ -614,14 +619,6 @@ public class rovWindow {
 		motor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Data.setMotors(!Data.getMotors());
-				if(Data.getMotors())
-				{
-					System.out.println("Motors turned on!");
-				}
-				else
-				{
-					System.out.println("Motors turned off!");
-				}
 			}
 		});
 		motor.setBackground(Color.RED);
@@ -633,15 +630,6 @@ public class rovWindow {
 		led.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Data.setLed(!Data.getLed());
-				
-				if(Data.getLed())
-				{
-					System.out.println("LED's turned on!");
-				}
-				else
-				{
-					System.out.println("LED's turned off!");
-				}
 			}
 		});
 		
@@ -650,45 +638,6 @@ public class rovWindow {
 
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(consolePn, "SubControl");
 		System.setOut(new PrintStream(taOutputStream));
-		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setForeground(Color.DARK_GRAY);
-		menuBar.setBackground(Color.DARK_GRAY);
-		frame.setJMenuBar(menuBar);
-		
-		JMenu mnSubcontrol = new JMenu("SubControl");
-		mnSubcontrol.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnSubcontrol);
-		
-		JMenuItem mntmInfo = new JMenuItem("Info");
-		mnSubcontrol.add(mntmInfo);
-		
-		JMenuItem mntmQuit = new JMenuItem("Quit");
-		mnSubcontrol.add(mntmQuit);
-		
-		JMenu mnOption = new JMenu("Option");
-		mnOption.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnOption);
-		
-		JMenuItem mntmConfigureSub = new JMenuItem("Configure Sub");
-		mnOption.add(mntmConfigureSub);
-		
-		JMenuItem mntmConnectToSub = new JMenuItem("Connect to Sub");
-		mnOption.add(mntmConnectToSub);
-		
-		JMenu mnHelp = new JMenu("Help");
-		mnHelp.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnHelp);
-		
-		JMenuItem mntmTutorial = new JMenuItem("Tutorial");
-		mnHelp.add(mntmTutorial);
-		
-		JMenu mnAbout = new JMenu("About");
-		mnAbout.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnAbout);
-		
-		JMenuItem mntmAuthors = new JMenuItem("Authors");
-		mnAbout.add(mntmAuthors);
 	}
 	
 	//Methods to refresh each data field, starting from voltage
@@ -745,9 +694,9 @@ public class rovWindow {
 	public synchronized void initWebcamPanel()
 	{
 		WebcamPanel cameraPanel = new WebcamPanel(rovStarter.camera.webcam);
-		frame.getContentPane().add(cameraPanel, BorderLayout.CENTER);
-		frame.setBounds(100, 100, 1241, 915);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSubControl.getContentPane().add(cameraPanel, BorderLayout.CENTER);
+		frmSubControl.setBounds(100, 100, 1241, 915);
+		frmSubControl.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		cameraPanel.setFPSDisplayed(true);
 		cameraPanel.setDisplayDebugInfo(true);
 		cameraPanel.setImageSizeDisplayed(true);

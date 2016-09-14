@@ -40,24 +40,39 @@ public class ControllerInput implements Runnable{
 			{
 				   System.out.println("Controller disconnected!");
 			}
-			
 			xValuePercentageLeftJoystick = controller.getXAxisPercentage();
 			yValuePercentageLeftJoystick = controller.getYAxisPercentage();
 			xValuePercentageRightJoystick = controller.getXRotationPercentage();
 			yValuePercentageRightJoystick = controller.getYRotationPercentage();
 			//System.out.println("controller test value:\t" + controller.getXAxisPercentage());
-			 
-			/*buttonA = controller.getButtonValue(0);
+			
+			buttonA = controller.getButtonValue(0);
 			buttonB = controller.getButtonValue(1);
 			buttonX = controller.getButtonValue(2);
-			buttonY = controller.getButtonValue(3);*/
+			buttonY = controller.getButtonValue(3);
+			
+			if(buttonA)
+			{
+				Data.setLed(true);
+			}
+			else if(buttonB)
+			{
+				Data.setLed(false);
+			}
+			
+			if(buttonX)
+			{
+				Data.setMotors(true);
+			}
+			else if(buttonY)
+			{
+				Data.setMotors(false);
+			}
 			
 			if(controller.componentExists(Component.Identifier.Axis.Z))
 			{
 			      zAxisValuePercentage = controller.getZAxisPercentage();
 			}
-			
-			
 			
 			/*
 			//Data.setVoltage(Data.getVoltage()+0.1);
@@ -82,10 +97,10 @@ public class ControllerInput implements Runnable{
 			Data.setHoriztontalMotors();
 			Data.setVerticalMotors();
 			
-			sendMotorValues(Data.getLeftMotor(),
+			sendMotorValues(Data.getFrontMotor(),
 					Data.getRightMotor(),
-					Data.getFrontMotor(),
-					Data.getBackMotor());
+					Data.getBackMotor(),
+					Data.getLeftMotor());
 			
 		}
 	}

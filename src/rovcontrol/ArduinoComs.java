@@ -229,7 +229,7 @@ public class ArduinoComs implements SerialPortEventListener{
 			Data.setCurrent4(b2f((int)bq.remove(),(int)bq.remove(),
 					(int)bq.remove(),(int)bq.remove()));
 			
-			Data.setRoll((int)b2f((int)bq.remove(),(int)bq.remove(),
+			Data.setRoll(-(int)b2f((int)bq.remove(),(int)bq.remove(),
 					(int)bq.remove(),(int)bq.remove()));
 			
 			Data.setPitch((int)b2f((int)bq.remove(),(int)bq.remove(),

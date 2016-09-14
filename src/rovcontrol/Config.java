@@ -11,7 +11,7 @@ public class Config {
 	final public static String VIDEO_PATH = "video.wmv"; // was .TS
 	final public static Dimension RESOLUTION = WebcamResolution.VGA.getSize();
 	
-	final public static String VERSION = "1.0";
+	final public static String VERSION = "2.0";
 	
 	public static String COMS_PORT = "COM0";
 	
