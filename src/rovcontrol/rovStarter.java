@@ -56,7 +56,7 @@ public class rovStarter {
 			window.initWebcamPanel();
 		} catch (Exception e1) {
 			System.out.println("error with camera.");
-			return;
+			//return;
 		}
 		
 		System.out.println(" > Welcome to Sub Control! \nCurrent version -- " + Config.VERSION);

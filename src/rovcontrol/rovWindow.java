@@ -1,7 +1,5 @@
 package rovcontrol;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,41 +7,25 @@ import java.awt.GridBagLayout;
 import javax.swing.JTextPane;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
-import java.awt.Insets;
 import java.io.PrintStream;
 
-import javax.swing.JRadioButton;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 
 import rovcontrol.TextAreaOutputStream;
 
-import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.JMenuBar;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
-import com.github.sarxos.webcam.WebcamResolution;
 import java.awt.Color;
 import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Toolkit;
 
 public class rovWindow {
@@ -105,6 +87,7 @@ public class rovWindow {
 		frmSubControl.setBackground(Color.BLACK);
 		frmSubControl.getContentPane().setBackground(Color.DARK_GRAY);
 		frmSubControl.setMinimumSize(new Dimension(1020,861));
+		frmSubControl.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Setting up each individual panel
 		
@@ -643,7 +626,7 @@ public class rovWindow {
 	//Methods to refresh each data field, starting from voltage
 	public synchronized void refreshVoltage(double v)
 	{
-		txtpnv.setText(Math.round(10*v)/10.0 +"v");
+		txtpnv.setText(Math.round(100*v)/100.0 +"v");
 	}
 	
 	public synchronized void refreshDepth(double d)
